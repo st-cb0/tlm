@@ -156,8 +156,9 @@ endif()
 
 # Declare PRODUCT_VERSION in cache, but then override user-defined value
 # if it is an empty string
-SET (PRODUCT_VERSION "" CACHE STRING "Product version with build number")
-IF ("${PRODUCT_VERSION}" STREQUAL "")
+IF (DEFINED PRODUCT_VERSION)
+  SET (PRODUCT_VERSION "${PRODUCT_VERSION}" CACHE STRING "Product version with build number" FORCE)
+ELSE ()
   SET (_product_version)
   IF (PYTHON_EXECUTABLE)
     # Try to determine product version from manifest
@@ -171,7 +172,7 @@ IF ("${PRODUCT_VERSION}" STREQUAL "")
     SET (_product_version "0.0.0-9999")
   ENDIF ()
   SET (PRODUCT_VERSION ${_product_version} CACHE STRING "Product version with build number" FORCE)
-ENDIF ("${PRODUCT_VERSION}" STREQUAL "")
+ENDIF ()
 
 IF (BUILD_ENTERPRISE)
   MESSAGE (STATUS "Building Couchbase Server ${PRODUCT_VERSION} Enterprise Edition")
